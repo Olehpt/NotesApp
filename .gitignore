@@ -1,0 +1,36 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build directories
+build/
+Build/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+
+# Visual Studio build output
+Debug/
+Release/
+x64/
+x86/
+
+# Compiled files
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.pdb
+
+# CMake FetchContent
+_deps/
+
+# Logs
+*.log
