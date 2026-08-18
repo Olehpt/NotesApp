@@ -18,6 +18,6 @@ add_executable(Notes
     Notes.cpp
 	NoteManager.cpp
 	Note.cpp
-)
+ "Parser.h" "Parcer.cpp")
 
 target_link_libraries(Notes PRIVATE nlohmann_json::nlohmann_json)
