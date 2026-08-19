@@ -1,17 +1,27 @@
 #pragma once
-#include <ctime>
 #include "nlohmann/json.hpp"
+#include <ctime>
 #include <string>
 #include <iostream>
+
+struct Date {
+	size_t day, mon, year;
+	Date();
+	Date(size_t d, size_t m, size_t y);
+	std::string to_string() const;
+	static Date today();
+	bool valid() const;
+};
 
 class Note {
 	size_t id;
 	std::string title;
-	std::tm* creation_date;
-	std::tm* target_date;
+	Date creation_date, target_date;
 public:
 	Note();
-	Note(const std::string& t, const std::time_t& td);
+	Note(const std::string& t, const Date& td);
 	void print();
-	std::string to_string();
+	std::string to_string() const;
+	Date get_date() const;
+	std::string get_title() const;
 };
