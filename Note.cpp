@@ -14,7 +14,7 @@ Date Date::today() {
 	return Date(local_time->tm_mday, local_time->tm_mon + 1, local_time->tm_year + 1900);
 }
 
-bool Date::valid() const //todo
+bool Date::valid() const //todo?
 {
     if (year < 1 || mon < 1 || mon > 12 || day < 1)
         return false;
@@ -49,7 +49,7 @@ bool Date::valid() const //todo
 }
 
 Note::Note() {
-	id = 0;
+    id = 0;
 	title = "null";
 	std::time_t now = std::time(nullptr);
 	creation_date = Date::today();
@@ -57,21 +57,17 @@ Note::Note() {
 }
 
 Note::Note(const std::string& t, const Date& td) {
-	id = 0;
+    id = 0;
 	title = t;
 	creation_date = Date::today();
 	target_date = td;
 }
 
-void Note::print() {
-	std::string result = to_string();
-	std::cout << result;
-}
-
-std::string Note::to_string() const {
-	std::string result = "id: " + std::to_string(id) + "; title: " + title + "; creation date: " + creation_date.to_string()
-		+ "; target date: " + target_date.to_string() + ";\n";
-	return result;
+Note::Note(size_t i, const std::string& t, const Date& td, const Date& cd) {
+	id = i;
+	title = t;
+	creation_date = cd;
+	target_date = td;
 }
 
 Date Note::get_date() const{

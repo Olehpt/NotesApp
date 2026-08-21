@@ -20,8 +20,7 @@ class Note {
 public:
 	Note();
 	Note(const std::string& t, const Date& td);
-	void print();
-	std::string to_string() const;
+	Note(size_t i, const std::string& t, const Date& td, const Date& cd);
 	Date get_date() const;
 	std::string get_title() const;
 };

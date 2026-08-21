@@ -34,7 +34,9 @@ void NoteManager::AddNote(Note& n) {
 		{"creation_date", Date::today().to_string()},
 		{"target_date", n.get_date().to_string()}
 	};
-	*file << "\n" << json_note.dump();
+	file->clear();
+	file->seekp(0, std::ios::end);
+	*file << json_note.dump() << "\n";
 }
 
 void NoteManager::ListNotes() {
@@ -45,9 +47,12 @@ void NoteManager::ListNotes() {
 		std::cout << "ID: " << note["id"] << " ; Title: " << note["title"] << " ; Creation Date: "
 			<< note["creation_date"] << " ; Target Date: " << note["target_date"] << std::endl;
 	}
+	file->clear();
 }
 
 bool NoteManager::get_free_id(size_t& id) {
+	file->clear();
+	file->seekg(0, std::ios::beg);
 	std::vector<size_t> ids = {};
 	std::string str;
 	while (std::getline(*file, str)) {
@@ -61,6 +66,12 @@ bool NoteManager::get_free_id(size_t& id) {
 			return false;
 		}
 	}
+	if (ids.empty()) {
+		id = 1;
+		file->clear();
+		file->seekg(0, std::ios::beg);
+		return true;
+	}
 	std::sort(ids.begin(), ids.end());
 	size_t counter = 0;
 	for (auto i : ids) {
@@ -68,12 +79,39 @@ bool NoteManager::get_free_id(size_t& id) {
 		if (counter != i) {
 			id = counter;
 			file->clear();
-			file->seekp(0, std::ios::end);
+			file->seekg(0, std::ios::beg);
 			return true;
 		}
 	}
 	id = counter + 1;
-	file->clear();
-	file->seekp(0, std::ios::end);
 	return true;
+}
+
+void NoteManager::RemoveNote(size_t id) {
+	file->clear();
+	file->seekg(0, std::ios::beg);
+	std::string str;
+	std::vector<Note> notes = {};
+	while (std::getline(*file, str)) {
+		nlohmann::json note = nlohmann::json::parse(str);
+		if (note["id"] == id) continue;
+		
+		std::stringstream ss(note["target_date"].get<std::string>());
+		int d, m, y; char sep;
+		Date td, cd;
+		ss >> d >> sep >> m >> sep >> y;
+		td = Date(d, m, y);
+		ss = std::stringstream(note["creation_date"].get<std::string>());
+		ss >> d >> sep >> m >> sep >> y;
+		cd = Date(d, m, y);
+		Note n((size_t)note[id], note["title"], td, cd);
+		notes.push_back(n);
+	}
+	file->close();
+	file = nullptr;
+	std::fstream* new_file = new std::fstream("notes_data.jsonl", std::ios::out | std::ios::trunc);
+	file = new_file;
+	for (auto n : notes) {
+		AddNote(n);
+	}
 }

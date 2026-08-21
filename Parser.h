@@ -9,7 +9,6 @@ const enum action {
 	add,
 	rm,
 	list,
-	modify,
 	unknown
 };
 
@@ -27,5 +26,4 @@ public:
 	void Add();
 	void Remove();
 	void List();
-	void Modify();
 };
